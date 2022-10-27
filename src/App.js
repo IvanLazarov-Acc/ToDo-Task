@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
-
+import React,{useEffect, useState} from "react";
+import List from "./components/List";
+import AddTodoForm from './components/AddTodoForm';
+import {TodoListContext} from "../src/Contexts/TodoListContext";
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  const url = " https://auto.loanvantage360.com/fps/api/todo";
+
+  const getTodos = async() => {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
+        },  
+    };
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    setTodos(data.data);
+}
+
+  useEffect(()=> {
+    getTodos();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TodoListContext.Provider value={{todos, setTodos}}>
+        <AddTodoForm/>
+        <List/>
+      </TodoListContext.Provider>
     </div>
   );
 }

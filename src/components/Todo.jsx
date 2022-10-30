@@ -1,10 +1,13 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import ProgressBar from "./ProgressBar";
 import EditModal from "./EditModal";
+import { TodoListContext } from "../Contexts/TodoListContext";
 
 
 const Todo = ({todoId,name, description, dueDate, isDone}) => {
     const [openEditModal, setOpenEditModal] = useState(false);
+    const {todos,setTodos} = useContext(TodoListContext);
+    const [singleTodo, setSingleTodo] = useState({});
 
     let progress = "";
     let dueDateChanged = new Date(dueDate);
@@ -22,33 +25,61 @@ const Todo = ({todoId,name, description, dueDate, isDone}) => {
               'Content-Type': 'application/json',
               'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
             },
-            body: JSON.stringify({isDone:true})
         };
-        const response = await fetch(url, requestOptions);
-        if(response.ok){
-          alert(`Todo with ID ${todoId} deleted successfully`);
-        }else{
-          alert("The deletion of the todo could not be processed, try again later!");
+        try {
+            const response = await fetch(url, requestOptions);
+            if(response.ok){
+                setTodos(
+                    todos.filter((todo) => {
+                       return todo.id !== todoId;
+                    })
+                 );
+                alert(`Todo with ID ${todoId} deleted successfully`);
+            }else{
+                alert("The deletion of the todo could not be processed, try again later!");
+            }
+        } catch (error) {
+            console.log(error);
         }
+        
         
     }
 
     const completeTodo = async() => {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
-            },
-
-        };
-        const response = await fetch(url, requestOptions);
-        if(response.ok){
-          alert(`Todo with ID ${todoId} completed successfully`);
-        }else{
-          alert("The completion of the todo could not be processed, try again later!");
-        }
         
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 
+                  'Content-Type': 'application/json',
+                  'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
+                },});
+            const data = await response.json();
+            setSingleTodo(data.data);
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 
+                  'Content-Type': 'application/json',
+                  'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
+                },
+                body: JSON.stringify({...singleTodo,isDone:true})
+            };
+            try {
+                console.log(singleTodo)
+                const response = await fetch(url, requestOptions);
+                if(response.ok){
+                  alert(`Todo with ID ${todoId} completed successfully`);
+                }else{
+                  alert("The completion of the todo could not be processed, try again later!");
+                }
+            } catch (error) {
+                console.log(error); 
+            }
+            
+          } catch (error) {
+            console.log(error);
+        }
+         
     }
 
     // console.log(dueDate);

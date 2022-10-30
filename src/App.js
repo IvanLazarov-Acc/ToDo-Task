@@ -22,11 +22,16 @@ function App() {
           'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
         },  
     };
-    const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    setTodos(data.data);
-    setIsLoading(false);
-}
+    try {
+      const response = await fetch(url, requestOptions);
+      const data = await response.json();
+      setTodos(data.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+    
+  }
 
   useEffect(()=> {
     getTodos();

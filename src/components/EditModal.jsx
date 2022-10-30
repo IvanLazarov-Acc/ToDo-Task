@@ -22,12 +22,17 @@ const EditModal = ({openEditModal, todoId})=>{
           body:JSON.stringify(newerTodo),
         // body:newerTodo,
       };
-      const response = await fetch(url, requestOptions);
-      if(response.ok){
-        alert(`Todo with ID ${todoId} updated successfully`);
-      }else{
-        alert("The update of the todo could not be processed, try again later!");
+      try {
+        const response = await fetch(url, requestOptions);
+        if(response.ok){
+          alert(`Todo with ID ${todoId} updated successfully`);
+        }else{
+          alert("The update of the todo could not be processed, try again later!");
+        }
+      } catch (error) {
+        console.log(error);
       }
+        
       
     }
 

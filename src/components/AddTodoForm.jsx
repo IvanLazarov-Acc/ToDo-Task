@@ -13,15 +13,15 @@ const AddTodoForm = () =>{
 
     const url = " https://auto.loanvantage360.com/fps/api/todo";
 
-    const addTodo = async(newTodo) => {
+    const addTodo = async() => {
       const requestOptions = {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
           },
-        //   body:JSON.stringify(newTodo),
-        body:newTodo,
+          body:JSON.stringify(newTodo),
+        // body:newTodo,
       };
       const response = await fetch(url, requestOptions);
       if(response.ok){
@@ -37,7 +37,7 @@ const AddTodoForm = () =>{
         newTodo.name = name
         newTodo.description = description
         newTodo.dueIn = dueIn;
-        addTodo(newTodo);  
+        addTodo();  
         // console.log(JSON.stringify(newTodo))
     }
 

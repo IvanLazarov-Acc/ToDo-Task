@@ -45,17 +45,25 @@ const Todo = ({todoId,name, description, dueDate, isDone}) => {
         
     }
 
+    
+
     const completeTodo = async() => {
         
         try {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 
+                  "Accept": 'application/json',
                   'Content-Type': 'application/json',
                   'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
                 },});
             const data = await response.json();
             setSingleTodo(data.data);
+            
+            
+        } catch (error) {
+            console.log(error);
+        }
             const requestOptions = {
                 method: 'PUT',
                 headers: { 
@@ -65,7 +73,6 @@ const Todo = ({todoId,name, description, dueDate, isDone}) => {
                 body: JSON.stringify({...singleTodo,isDone:true})
             };
             try {
-                console.log(singleTodo)
                 const response = await fetch(url, requestOptions);
                 if(response.ok){
                   alert(`Todo with ID ${todoId} completed successfully`);
@@ -75,18 +82,11 @@ const Todo = ({todoId,name, description, dueDate, isDone}) => {
             } catch (error) {
                 console.log(error); 
             }
-            
-          } catch (error) {
-            console.log(error);
-        }
+        
          
     }
 
-    // console.log(dueDate);
-    // console.log(expiryDate);
-    // console.log(currentDate);
-    // console.log(dueDateChanged);
-    // console.log(dueDateChanged < currentDate);
+
 
     if(dueDateChanged >= currentDate && isDone===true){
         progress = "Finished";
@@ -115,8 +115,9 @@ const Todo = ({todoId,name, description, dueDate, isDone}) => {
         buttonOpacity=0.7;
     }
     
-    isButton = false;
-    buttonOpacity = 1;
+    
+    // isButton = false;
+    // buttonOpacity = 1;
 
     return(<div className="todo">
         <li className="todo-item">

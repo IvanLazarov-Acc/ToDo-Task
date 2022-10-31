@@ -1,15 +1,14 @@
 import React, {useState} from "react";
-import {Stack, TextField} from "@mui/material";
-import { DateTimePicker } from '@mui/x-date-pickers';
 
 
-const AddTodoForm = () =>{
+
+const AddTodoForm = ({getTodos}) =>{
 
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [dueIn, setDueIn] = useState(null);
-    const newTodo = {name:"",description:"",dueIn:new Date(), isDone:false}
+    const [dueIn, setDueIn] = useState("");
+    const newTodo = {name:"",description:"",dueIn:null}
 
     const url = " https://auto.loanvantage360.com/fps/api/todo";
 
@@ -21,14 +20,20 @@ const AddTodoForm = () =>{
             'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
           },
           body:JSON.stringify(newTodo),
-        // body:newTodo,
       };
-      const response = await fetch(url, requestOptions);
-      if(response.ok){
-        alert("New todo added successfully");
-      }else{
-        alert("The new todo could not be processed, try again later!");
+      try{
+        const response = await fetch(url, requestOptions);
+        if(response.ok){
+          alert("New todo added successfully");
+        }else{
+          alert("The new todo could not be processed, try again later!");
+        }
+      } catch(error){
+        console.log(error);
+      } finally{
+        getTodos();
       }
+      
       
     }
 
@@ -46,6 +51,9 @@ const AddTodoForm = () =>{
     };
     const handleDescriptionChange = event => {
         setDescription(event.target.value);
+    };
+    const handleDueInChange = event => {
+      setDueIn(event.target.value);
     };
     
 
@@ -83,14 +91,16 @@ const AddTodoForm = () =>{
             
                 
             <label>
-                Due Date:
-                <Stack spacing={4} sx={{width:"250px"}}>
-                    <DateTimePicker lable="Select Due Date"
-                                    renderInput={(params)=> <TextField {...params} required/>}
-                                    value={dueIn} 
-                                    disablePast={true}
-                                    onChange={(newValue) => setDueIn(newValue)}/>
-                </Stack>
+                Hours to complete:
+                <input
+                    required
+                    type="number"
+                    id="due"
+                    name="dueIn"
+                    placeholder="Add Hours"
+                    value={dueIn}
+                    onChange={handleDueInChange}
+                />
             </label>
             
             

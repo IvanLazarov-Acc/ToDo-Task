@@ -1,18 +1,19 @@
 
-import React, {useState} from "react";
-import {Stack, TextField} from "@mui/material";
-import { DateTimePicker } from '@mui/x-date-pickers';
+import React, {useState,useContext} from "react";
+import { TodoListContext } from "../Contexts/TodoListContext";
 const EditModal = ({openEditModal, todoId})=>{
     if(!openEditModal) return null;
 
+    const {getTodos} = useContext(TodoListContext);
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [dueIn, setDueIn] = useState(null);
-    const newerTodo = {name:"",description:"",dueIn:new Date(), isDone:false}
+    const [dueIn, setDueIn] = useState("");
+    const newerTodo = {id:"",name:"",description:"",dueIn:""}
 
-    const url = `https://auto.loanvantage360.com/fps/api/todo/${todoId}`;
+    const url = `https://auto.loanvantage360.com/fps/api/todo`;
 
-    const updateTodo = async(newerTodo) => {
+    const updateTodo = async() => {
       const requestOptions = {
           method: 'PUT',
           headers: { 
@@ -20,7 +21,7 @@ const EditModal = ({openEditModal, todoId})=>{
             'Authorization': `Basic ${process.env.REACT_APP_AUTH_TOKEN}`
           },
           body:JSON.stringify(newerTodo),
-        // body:newerTodo,
+          
       };
       try {
         const response = await fetch(url, requestOptions);
@@ -31,20 +32,21 @@ const EditModal = ({openEditModal, todoId})=>{
         }
       } catch (error) {
         console.log(error);
+      }finally{
+        getTodos();
       }
         
-      
     }
 
     
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        newerTodo.name = name
-        newerTodo.description = description
+        newerTodo.id = todoId;
+        newerTodo.name = name;
+        newerTodo.description = description;
         newerTodo.dueIn = dueIn;
-        updateTodo(newerTodo);  
-        // console.log(JSON.stringify(newerTodo))
+        updateTodo();  
     }
 
     const handleNameChange = event => {
@@ -52,6 +54,9 @@ const EditModal = ({openEditModal, todoId})=>{
     };
     const handleDescriptionChange = event => {
         setDescription(event.target.value);
+    };
+    const handleDueInChange = event => {
+      setDueIn(event.target.value);
     };
 
     return(<div className="form-container">
@@ -83,15 +88,17 @@ const EditModal = ({openEditModal, todoId})=>{
             />
         </label>
         <label>
-            Due Date:
-            <Stack spacing={4} sx={{width:"250px"}}>
-                <DateTimePicker lable="Select Due Date"
-                                renderInput={(params)=> <TextField {...params} required/>}
-                                value={dueIn} 
-                                disablePast={true}
-                                onChange={(newValue) => setDueIn(newValue)}/>
-            </Stack>
-        </label>
+                Hours to complete:
+                <input
+                    required
+                    type="number"
+                    id="due"
+                    name="dueIn"
+                    placeholder="Add Hours"
+                    value={dueIn}
+                    onChange={handleDueInChange}
+                />
+            </label>
 
         <input type="submit" className="button" id="new-todo-button" value="Edit Todo"/>
     </form>

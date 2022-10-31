@@ -43,8 +43,8 @@ function App() {
     return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <div className="App">
-          <TodoListContext.Provider value={{todos, setTodos}}>
-            <AddTodoForm/>
+          <TodoListContext.Provider value={{todos, setTodos,getTodos}}>
+            <AddTodoForm getTodos={getTodos}/>
             <List/>
           </TodoListContext.Provider>
         </div>

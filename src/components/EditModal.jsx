@@ -56,35 +56,42 @@ const EditModal = ({openEditModal, todoId})=>{
 
     return(<div className="form-container">
     <form className="todo-form" action="post" onSubmit={handleSubmit}>
-        <input
-            maxLength={100}
-            required
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Add Task Name"
-            value={name}
-            onChange={handleNameChange}
-        />
-        <textarea
-            maxLength={500}
-            required
-            type="text"
-            id="description"
-            name="description"
-            placeholder="Add Task Description"
-            value={description}
-            onChange={handleDescriptionChange}
-        />
-
-        <Stack spacing={4} sx={{width:"250px"}}>
-            <DateTimePicker lable="Select Due Date"
-                            renderInput={(params)=> <TextField {...params} required/>}
-                            value={dueIn} 
-                            disablePast={true}
-                            onChange={(newValue) => setDueIn(newValue)}/>
-        </Stack>
-        
+        <label>
+            Task Name:
+            <input
+                maxLength={100}
+                required
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Add Task Name"
+                value={name}
+                onChange={handleNameChange}
+            />
+        </label>
+        <label>
+            Task Description:
+            <textarea
+                maxLength={500}
+                required
+                type="text"
+                id="description"
+                name="description"
+                placeholder="Add Task Description"
+                value={description}
+                onChange={handleDescriptionChange}
+            />
+        </label>
+        <label>
+            Due Date:
+            <Stack spacing={4} sx={{width:"250px"}}>
+                <DateTimePicker lable="Select Due Date"
+                                renderInput={(params)=> <TextField {...params} required/>}
+                                value={dueIn} 
+                                disablePast={true}
+                                onChange={(newValue) => setDueIn(newValue)}/>
+            </Stack>
+        </label>
 
         <input type="submit" className="button" id="new-todo-button" value="Edit Todo"/>
     </form>

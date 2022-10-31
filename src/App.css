@@ -24,18 +24,27 @@ body{
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  font-size: 1.5rem;
   border: solid 3px;
   border-radius: 50px;
   width: 22rem;
 }
 
+label{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #name, #description, .due{
-  margin: 10px;
+  margin: 5px;
   padding: 5px 25px 5px 25px;
   text-align: center;
 }
 
 #new-todo-button{
+  margin: 1rem;
   background-color: cadetblue;
 }
 
